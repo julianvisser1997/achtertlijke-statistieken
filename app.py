@@ -7,7 +7,7 @@ Created on Fri Apr  1 15:17:32 2022
 
 from dash import Dash, html, dcc, dash_table
 import plotly.express as px
-import pybase64 as base64
+# import pybase64 as base64
 import pandas as pd
 
 path = "./"
@@ -22,7 +22,7 @@ server = app.server
 stats_overview = pd.read_csv(path+'stats.csv')
 opstelling_figure = "./opstelling.png"
 
-test_base64 = base64.b64encode(open(opstelling_figure, 'rb').read()).decode('ascii')
+# test_base64 = base64.b64encode(open(opstelling_figure, 'rb').read()).decode('ascii')
 
 
 
@@ -83,7 +83,8 @@ app.layout = html.Div(children=[
                                      )],
                                     style={'marginBottom': 50, 'width': '100%', 'display': 'inline-block'})]),
                         dcc.Tab(label='Opstelling', children=[
-                                html.Div([html.Img(src='data:image/png;base64,{}'.format(test_base64)),]),])
+                                # html.Div([html.Img(src='data:image/png;base64,{}'.format(test_base64)),]),
+                                ])
                         ])])
 
 
