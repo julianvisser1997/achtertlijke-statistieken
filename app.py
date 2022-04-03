@@ -7,7 +7,7 @@ Created on Fri Apr  1 15:17:32 2022
 
 from dash import Dash, html, dcc, dash_table
 import plotly.express as px
-import base64
+import pybase64 as base64
 import pandas as pd
 
 path = "./"
