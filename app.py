@@ -7,17 +7,24 @@ Created on Fri Apr  1 15:17:32 2022
 
 from dash import Dash, html, dcc, dash_table
 import plotly.express as px
+import base64
 import pandas as pd
 
 path = "./"
         
 app = Dash(__name__)
 
-server = app.server
-
 app.title = '8erlijke statistieken'
 
+server = app.server
+
+
 stats_overview = pd.read_csv(path+'stats.csv')
+opstelling_figure = "./opstelling.png"
+
+test_base64 = base64.b64encode(open(opstelling_figure, 'rb').read()).decode('ascii')
+
+
 
 goals_assists = stats_overview.loc[0:len(stats_overview)-3,'Arjan':'Tom']
 
@@ -60,20 +67,24 @@ fig1 = px.bar(df_stats_melted, x = "Datum", y = "value", color = 'variable',
     
 
 app.layout = html.Div(children=[
-                        html.Div(dcc.Graph(id='cumulative-goals', figure=fig0)),
-                        html.Div(dcc.Graph(id='individual-matches',figure=fig1),
-                                 style={'marginBottom':'88px'}),
-                        html.Div([dash_table.DataTable(id='manual-input-editable-table',
-                         data=stats_overview.to_dict('records'), 
-                         columns= [{"name": i, "id": i} for i in stats_overview.columns[0:-1]],
-                         style_data_conditional=[{'if': {'row_index': 'odd'},'backgroundColor': 'rgb(220, 220, 220)'},
-                                                 {'if': {'column_id': 'asset_name'},'fontWeight': 'bold' }],
-                         style_cell={'height': 'auto','minWidth': '50px', 'width': '50px', 'maxWidth': '80px', 'whiteSpace': 'normal'},
-                         style_header={'fontWeight': 'bold'},
-                         editable=False
-                         )],
-    style={'marginBottom': 50, 'width': '100%', 'display': 'inline-block'}),
-                        ])
+                        dcc.Tabs([
+                            dcc.Tab(label='Statistieken',children=[
+                                    html.Div(dcc.Graph(id='cumulative-goals', figure=fig0)),
+                                    html.Div(dcc.Graph(id='individual-matches',figure=fig1),
+                                             style={'marginBottom':'88px'}),
+                                    html.Div([dash_table.DataTable(id='manual-input-editable-table',
+                                     data=stats_overview.to_dict('records'), 
+                                     columns= [{"name": i, "id": i} for i in stats_overview.columns[0:-1]],
+                                     style_data_conditional=[{'if': {'row_index': 'odd'},'backgroundColor': 'rgb(220, 220, 220)'},
+                                                             {'if': {'column_id': 'asset_name'},'fontWeight': 'bold' }],
+                                     style_cell={'height': 'auto','minWidth': '50px', 'width': '50px', 'maxWidth': '80px', 'whiteSpace': 'normal'},
+                                     style_header={'fontWeight': 'bold'},
+                                     editable=False
+                                     )],
+                                    style={'marginBottom': 50, 'width': '100%', 'display': 'inline-block'})]),
+                        dcc.Tab(label='Opstelling', children=[
+                                html.Div([html.Img(src='data:image/png;base64,{}'.format(test_base64)),]),])
+                        ])])
 
 
 if __name__ == '__main__':
