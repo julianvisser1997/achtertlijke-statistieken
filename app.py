@@ -13,6 +13,8 @@ path = "./"
         
 app = Dash(__name__)
 
+server = app.server
+
 app.title = '8erlijke statistieken'
 
 stats_overview = pd.read_csv(path+'stats.csv')
